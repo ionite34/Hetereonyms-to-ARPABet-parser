@@ -7,13 +7,14 @@ if not isDev:
 
 # imports
 from plugins.hetereonyms_to_arpabet.g2p_h import G2p
-import time
+import datetime
 
 logger = setupData["logger"]
 
 def het_to_arpabet(data=None):
     global logger
     global G2p
+    global datetime
     
     # Grab original text line
     text_line = data["sentence"]
@@ -24,7 +25,8 @@ def het_to_arpabet(data=None):
     logger.log(f'dict_to_replace: {dict_to_replace}')
 
     # Start timer
-    start_time = time.time()
+    start_time = datetime.datetime.now()
+
     # Convert to ARPABet
     g2p = G2p()
     # Get converted string
@@ -35,3 +37,10 @@ def het_to_arpabet(data=None):
     logger.log(f'converted_string_joined: {converted_string_joined}')
     # modify the sentence
     data["sentence"] = converted_string_joined
+
+    # End timer
+    end_time = datetime.datetime.now()
+    # Report to log
+    delta = end_time - start_time
+    elapsed = "{:.2f}".format(delta.total_seconds() * 1000)
+    logger.log(f'Time taken: {elapsed} ms')
