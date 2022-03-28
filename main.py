@@ -41,7 +41,3 @@ def het_to_arpabet(data=None):
     logger.log(f'converted_string_joined: {converted_string_joined}')
     # set to sequence
     data["sequence"] = converted_string_joined
-
-
-def het_to_arpabet_batch(data=None):
-    #wip
