@@ -13,14 +13,6 @@ def het_to_arpabet(data=None):
     global logger
     global G2p
 
-    # logger.log(f'duration: {data["duration"].shape}')
-    # logger.log(f'pitch: {data["pitch"].shape}')
-    # logger.log(f'text: {data["text"]}')
-
-    # Exit early if this is the second time doing this for a sequence (otherwise the changes will be multiplicative)
-    # if not data["is_fresh_synth"]:
-    #     return
-
     # Detect if the model type supports ARPABet, model type has to be FastPitch1.1 or above
     # Parse the "modelType" of the "data" and parse string
     modelType = data["modelType"]
