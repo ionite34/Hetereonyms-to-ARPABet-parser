@@ -146,6 +146,26 @@ class G2p(object):
 
         preds = [self.idx2p.get(idx, "<unk>") for idx in preds]
         return preds
+    
+    # Checks if a string line contains a heteronym or not
+    def contains_het(self, line):
+        # preprocessing for encoding
+        text = unicode(text)
+        # Strip accents
+        text = ''.join(char for char in unicodedata.normalize('NFD', text)
+                       if unicodedata.category(char) != 'Mn')
+        # Convert to lower case
+        text = text.lower()
+        # Remove all puntuaction
+        text = re.sub("[^ a-z'.,?!\-]", "", text)
+        # tokenization
+        words = word_tokenize(text)
+        # Check match
+        for word in words:
+            if word in self.homograph2features:
+                return True
+        # No match
+        return False
 
     def __call__(self, text):
         # preprocessing
