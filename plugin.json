@@ -1,0 +1,28 @@
+{
+    "plugin-name": "Heteronym to ARPABet preprocessing",
+    "author": "ionite",
+    "nexus-link": null,
+    "plugin-version": "0.1",
+    "plugin-short-description": "Detects heteronyms in compatible model lines and converts to ARPAbet",
+    "min-app-version": "2.1.1",
+    "install-requires-restart": false,
+    "uninstall-requires-restart": false,
+
+    "front-end-style-files": [],
+
+    "front-end-hooks": {},
+    "back-end-hooks": {
+        "synth-line": {
+            "pre": {
+                "file": "main.py",
+                "function": "het_to_arpabet_line"
+            }
+        },
+        "batch-synth-line": {
+            "pre": {
+                "file": "main.py",
+                "function": "het_to_arpabet_batch"
+            }
+        }
+    }
+}
