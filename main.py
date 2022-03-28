@@ -9,7 +9,7 @@ from plugins.hetereonyms_to_arpabet.g2p_h import G2p
 
 logger = setupData["logger"]
 
-def het_to_arpabet_line(data=None):
+def het_to_arpabet(data=None):
     global logger
     global G2p
 
