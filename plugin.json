@@ -12,16 +12,10 @@
 
     "front-end-hooks": {},
     "back-end-hooks": {
-        "synth-line": {
+        "arpabet-replace": {
             "pre": {
                 "file": "main.py",
-                "function": "het_to_arpabet_line"
-            }
-        },
-        "batch-synth-line": {
-            "pre": {
-                "file": "main.py",
-                "function": "het_to_arpabet_batch"
+                "function": "het_to_arpabet"
             }
         }
     }
