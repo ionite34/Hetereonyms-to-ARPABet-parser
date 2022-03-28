@@ -148,7 +148,6 @@ class G2p(object):
         return preds
 
     def __call__(self, text):
-        global logger
         # preprocessing
         text = unicode(text)
         #text = normalize_numbers(text)
