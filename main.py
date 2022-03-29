@@ -29,8 +29,14 @@ def het_to_arpabet(data=None):
     # Start timer
     start_time = datetime.datetime.now()
 
-    # Starts G2p
-    g2p = G2p()
+    # Flag for if initialization happened during this run
+    initialized_g2p = False
+    # Check if G2p is started in cache, if not, create it
+    if "context_cache" not in data.keys():
+        data["context_cache"] = {}
+        data["context_cache"]["g2p"] = G2p()
+        initialized_g2p = True
+    g2p = data["context_cache"]["g2p"]
 
     # Check if there is a heteronym in the text using the heteronyms.en dictionary in the g2p_h subfolder
     if g2p.contains_het(text_line):
@@ -59,12 +65,11 @@ def het_to_arpabet(data=None):
         # Log the new text line
         logger.log(f'Modified line: {text_line}')
 
-    # Add a space to the beginning and end of the text line
-    data["sentence"] = '{ } ' + data["sentence"] + ' { }'
-    # data["sentence"] = '{ } ' + data["sentence"]
     # End timer
     end_time = datetime.datetime.now()
     # Report to log
     delta = end_time - start_time
     elapsed = "{:.2f}".format(delta.total_seconds() * 1000)
+    if initialized_g2p:
+        logger.log(f'Model initialization occured during this run, expect time taken to be longer.')
     logger.log(f'Time taken: {elapsed} ms')
