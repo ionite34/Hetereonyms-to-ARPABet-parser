@@ -219,7 +219,10 @@ class G2p(object):
                 phoneme = self.cmu[word][0]
                 # Add to replacements list
                 replacements.append(phoneme)
-            elif gen_unknown and (word not in self.cmu) and word.isalpha() and not word.isnumeric():
+            elif gen_unknown and (word not in self.cmu) and not word.isnumeric():
+                # Skip if the word is a single length punctuation
+                if len(word) == 1 and word in string.punctuation:
+                    continue
                 # Unknown word, record original to list
                 originals.append(word)
                 # Generate unknown phoneme
