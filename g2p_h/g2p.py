@@ -226,8 +226,8 @@ class G2p(object):
                 # Skip if the word is a single length punctuation
                 if len(word) == 1 and not word.isalpha():
                     continue
-                # Skip if the entire word consists of puntuation
-                if word in string.punctuation:
+                # Skip if the entire word has no letters, check with regex
+                if not re.search('[a-zA-Z]', word):
                     continue
                 # Unknown word, record original to list
                 originals.append(word)
