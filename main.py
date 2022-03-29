@@ -23,7 +23,7 @@ def het_to_arpabet(data=None):
     # Grab dictionary words about to be replaced downstream
     dict_to_replace = data["dict_words"]
 
-    logger.log(f'original_line: {text_line}')
+    logger.log(f'original_line: <{text_line}>')
     logger.log(f'dict_to_replace: {dict_to_replace}')
 
     # Start timer
@@ -38,11 +38,11 @@ def het_to_arpabet(data=None):
         initialized_g2p = True
     g2p = data["context_cache"]["g2p"]
 
-    # Check if there is a heteronym in the text using the heteronyms.en dictionary in the g2p_h subfolder
-    if g2p.contains_het(text_line):
-        # If there is, get the replacement list of homographs and their phonemes
-        source_list = g2p.het_replace(text_line, True)
-        originals, replacements, typeWord = source_list
+    # Get replacements from g2p
+    source_list = g2p.het_replace(text_line, True)
+    originals, replacements, typeWord = source_list
+    # Check if originals is not empty
+    if len(originals)>0:
         logger.log(f'originals: {originals}')
         logger.log(f'replacements: {replacements}')
         logger.log(f'Heteronym types: {typeWord}')
@@ -54,7 +54,7 @@ def het_to_arpabet(data=None):
                 continue
             logger.log(f'index: [{index}]')
             logger.log(f'original word: <{original_word}>')
-            # build the replacement string
+            # build the rep lacement string
             # needs to be enclosed by curly brackets, and each phoneme is space separated
             replacement_string = '{' + ' '.join(replacements[index]) + '}'
             logger.log(f'replacement string: <{replacement_string}>')
@@ -63,7 +63,15 @@ def het_to_arpabet(data=None):
         # Set the data to the new text line
         data["sentence"] = text_line
         # Log the new text line
-        logger.log(f'Modified line: {text_line}')
+        logger.log(f'Modified line: <{text_line}>')
+    else:
+        logger.log(f'No replacements found')
+
+    # Find predicted word:
+    if False:
+        predicted_word_list = g2p.predict_text_line("misogyny")
+        originals_t, replacements_t = predicted_word_list
+        logger.log(f'Predicted word special: {replacements_t[0]}')
 
     # End timer
     end_time = datetime.datetime.now()
