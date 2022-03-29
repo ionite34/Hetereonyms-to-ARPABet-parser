@@ -150,7 +150,7 @@ class G2p(object):
     # Checks if a string line contains a heteronym or not
     def contains_het(self, line):
         # preprocessing for encoding
-        text = unicode(text)
+        text = unicode(line)
         # Strip accents
         text = ''.join(char for char in unicodedata.normalize('NFD', text)
                        if unicodedata.category(char) != 'Mn')
@@ -166,6 +166,56 @@ class G2p(object):
                 return True
         # No match
         return False
+
+    # Returns a list of heteronyms and their replacement phonemes, in order
+    def het_replace(self, line):
+        # preprocessing
+        text = unicode(line)
+        #text = normalize_numbers(text)
+        text = ''.join(char for char in unicodedata.normalize('NFD', text)
+                       if unicodedata.category(char) != 'Mn')  # Strip accents
+        text = text.lower()
+        text = re.sub("[^ a-z'.,?!\-]", "", text)
+
+        # tokenization
+        words = word_tokenize(text)
+        tokens = pos_tag(words)  # tuples of (word, tag)
+
+        # steps
+        replacements = []
+        originals = []
+        typeWord = []
+        for word, pos in tokens:
+            if word in self.homograph2features:
+                # Heteronym match, record original to list
+                originals.append(word)
+                # Get homograph features
+                type1, type2, pos1 = self.homograph2features[word]
+                typeWord.append(pos)
+                # Run special case for read
+                if word == 'read':
+                    # Verb, past tense
+                    if pos.startswith('VBD'):
+                        het_as_phoneme = type2
+                    # Verb, past participle
+                    elif pos.startswith('VBN'):
+                        het_as_phoneme = type2
+                    else:
+                        het_as_phoneme = type1
+                else:
+                    # Depending on pos, choose type of replacement pronunciation
+                    if pos.startswith(pos1):
+                        het_as_phoneme = type1
+                    else:
+                        het_as_phoneme = type2
+                # Add to replacements list
+                phoneme = []
+                phoneme.extend(het_as_phoneme)
+                replacements.append(phoneme)
+
+        # Form replacements and originals into a list of tuples
+        # return replacements[:-1]
+        return (originals, replacements, typeWord)
 
     def __call__(self, text):
         # preprocessing
