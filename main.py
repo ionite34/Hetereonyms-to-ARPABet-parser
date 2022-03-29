@@ -42,6 +42,10 @@ def het_to_arpabet(data=None):
         logger.log(f'Heteronym types: {typeWord}')
         # Replace the original words in the text with the homograph phonemes
         for index, original_word in enumerate(originals):
+            # If we detect the original_word in the dict_to_replace, skip this iteration
+            if original_word in dict_to_replace:
+                logger.log(f'word skipped due to dictionary conflict: {original_word}')
+                continue
             logger.log(f'index: [{index}]')
             logger.log(f'original word: <{original_word}>')
             # build the replacement string
