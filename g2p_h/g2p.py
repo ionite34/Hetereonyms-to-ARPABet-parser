@@ -200,6 +200,8 @@ class G2p(object):
                     # Verb, past participle
                     elif pos.startswith('VBN'):
                         het_as_phoneme = type2
+                    elif pos.startswith('VBP'):
+                        het_as_phoneme = type2
                     else:
                         het_as_phoneme = type1
                 else:
@@ -221,7 +223,10 @@ class G2p(object):
                 replacements.append(phoneme)
             elif gen_unknown and (word not in self.cmu) and not word.isnumeric():
                 # Skip if the word is a single length punctuation
-                if len(word) == 1 and word in string.punctuation:
+                if len(word) == 1 and not word.isalpha():
+                    continue
+                # Skip if the entire word is consisted of puntuation, check with regex
+                if re.match("^[.,?!:;'\"-]+$", word):
                     continue
                 # Unknown word, record original to list
                 originals.append(word)
