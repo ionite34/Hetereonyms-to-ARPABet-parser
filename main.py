@@ -44,7 +44,7 @@ def het_to_arpabet(data=None):
         for index, original_word in enumerate(originals):
             # If we detect the original_word in the dict_to_replace, skip this iteration
             if original_word in dict_to_replace:
-                logger.log(f'word skipped due to dictionary conflict: {original_word}')
+                logger.log(f"[Notice]: A word was skipped due to dictionary conflict: ['{original_word}']")
                 continue
             logger.log(f'index: [{index}]')
             logger.log(f'original word: <{original_word}>')
