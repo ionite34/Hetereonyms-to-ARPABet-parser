@@ -7,6 +7,7 @@ Modified for use with hetereonyms by ionite34
 https://github.com/ionite34/g2pH
 '''
 
+import string
 from nltk import pos_tag
 from nltk.corpus import cmudict
 import nltk
@@ -225,8 +226,8 @@ class G2p(object):
                 # Skip if the word is a single length punctuation
                 if len(word) == 1 and not word.isalpha():
                     continue
-                # Skip if the entire word is consisted of puntuation, check with regex
-                if re.match("^[.,?!:;'\"-]+$", word):
+                # Skip if the entire word consists of puntuation
+                if word in string.punctuation:
                     continue
                 # Unknown word, record original to list
                 originals.append(word)
@@ -238,6 +239,49 @@ class G2p(object):
         # Form replacements and originals into a list of tuples
         # return replacements[:-1]
         return (originals, replacements, typeWord)
+
+    # Returns a list of heteronyms by prediction from line
+    def predict_text_line(self, line, get_cmu=False):
+        # preprocessing
+        text = unicode(line)
+        #text = normalize_numbers(text)
+        text = ''.join(char for char in unicodedata.normalize('NFD', text)
+                       if unicodedata.category(char) != 'Mn')  # Strip accents
+        text = text.lower()
+        text = re.sub("[^ a-z'.,?!\-]", "", text)
+
+        # tokenization
+        words = word_tokenize(text)
+        tokens = pos_tag(words)  # tuples of (word, tag)
+
+        # steps
+        replacements = []
+        originals = []
+        for word, pos in tokens:
+            if get_cmu and word in self.cmu:
+                # CMU dictionary match, record original to list
+                originals.append(word)
+                # Get CMU pronunciation
+                phoneme = self.cmu[word][0]
+                # Add to replacements list
+                replacements.append(phoneme)
+            else:
+                # Skip if the word is a single length punctuation
+                if len(word) == 1 and not word.isalpha():
+                    continue
+                # Skip if the entire word consists of puntuation
+                if word in string.punctuation:
+                    continue
+                # Unknown word, record original to list
+                originals.append(word)
+                # Generate unknown phoneme
+                phoneme = self.predict(word)
+                # Add to replacements list
+                replacements.append(phoneme)
+
+        # Form replacements and originals into a list of tuples
+        # return replacements[:-1]
+        return (originals, replacements)
 
     def __call__(self, text):
         # preprocessing
