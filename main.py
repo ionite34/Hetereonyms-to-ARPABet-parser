@@ -35,7 +35,7 @@ def het_to_arpabet(data=None):
     # Check if there is a heteronym in the text using the heteronyms.en dictionary in the g2p_h subfolder
     if g2p.contains_het(text_line):
         # If there is, get the replacement list of homographs and their phonemes
-        source_list = g2p.het_replace(text_line)
+        source_list = g2p.het_replace(text_line, True)
         originals, replacements, typeWord = source_list
         logger.log(f'originals: {originals}')
         logger.log(f'replacements: {replacements}')
@@ -50,13 +50,14 @@ def het_to_arpabet(data=None):
             logger.log(f'replacement string: <{replacement_string}>')
             # match the original word as a whole word only using regex (\b) and replace
             text_line = re.sub(r'\b' + original_word + r'\b', replacement_string, text_line, 1)
-        # Add a space to the beginning and end of the text line
-        text_line = '{ } ' + text_line + ' { }'
         # Set the data to the new text line
         data["sentence"] = text_line
         # Log the new text line
         logger.log(f'Modified line: {text_line}')
 
+    # Add a space to the beginning and end of the text line
+    data["sentence"] = '{ } ' + data["sentence"] + ' { }'
+    # data["sentence"] = '{ } ' + data["sentence"]
     # End timer
     end_time = datetime.datetime.now()
     # Report to log

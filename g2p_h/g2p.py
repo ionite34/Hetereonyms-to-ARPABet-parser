@@ -168,7 +168,7 @@ class G2p(object):
         return False
 
     # Returns a list of heteronyms and their replacement phonemes, in order
-    def het_replace(self, line):
+    def het_replace(self, line, gen_unknown=False, get_cmu=False):
         # preprocessing
         text = unicode(line)
         #text = normalize_numbers(text)
@@ -211,6 +211,20 @@ class G2p(object):
                 # Add to replacements list
                 phoneme = []
                 phoneme.extend(het_as_phoneme)
+                replacements.append(phoneme)
+            elif get_cmu and word in self.cmu:
+                # CMU dictionary match, record original to list
+                originals.append(word)
+                # Get CMU pronunciation
+                phoneme = self.cmu[word][0]
+                # Add to replacements list
+                replacements.append(phoneme)
+            elif gen_unknown and (word not in self.cmu) and word.isalpha() and not word.isnumeric():
+                # Unknown word, record original to list
+                originals.append(word)
+                # Generate unknown phoneme
+                phoneme = self.predict(word)
+                # Add to replacements list
                 replacements.append(phoneme)
 
         # Form replacements and originals into a list of tuples
