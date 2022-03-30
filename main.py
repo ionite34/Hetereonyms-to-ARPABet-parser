@@ -20,11 +20,17 @@ def het_to_arpabet(data=None):
     
     # Grab original text line
     text_line = data["sentence"]
+
+    # Preprocessing
+
+    # 1. Clear all double spaces and replace with single space
+    text_line = re.sub(r'\s+', ' ', text_line)
+
     # Grab dictionary words about to be replaced downstream
     dict_to_replace = data["dict_words"]
 
     logger.log(f'original_line: <{text_line}>')
-    logger.log(f'dict_to_replace: {dict_to_replace}')
+    #logger.log(f'dict_to_replace: {dict_to_replace}')
 
     # Start timer
     start_time = datetime.datetime.now()
@@ -43,14 +49,15 @@ def het_to_arpabet(data=None):
     originals, replacements, typeWord = source_list
     # Check if originals is not empty
     if len(originals)>0:
-        logger.log(f'originals: {originals}')
-        logger.log(f'replacements: {replacements}')
+        logger.log(f'Originals: {originals}')
+        logger.log(f'Replacements: {replacements}')
         logger.log(f'Heteronym types: {typeWord}')
         # Replace the original words in the text with the homograph phonemes
         for index, original_word in enumerate(originals):
             # If we detect the original_word in the dict_to_replace, skip this iteration
             if original_word in dict_to_replace:
-                logger.log(f"[Notice]: A word was skipped due to dictionary conflict: ['{original_word}']")
+                logger.log(f"[Caution](1/2): A word was skipped due to dictionary conflict: ['{original_word}']")
+                logger.log(f"[Caution](2/2): A word was skipped due to dictionary conflict: ['{original_word}']")
                 continue
             logger.log(f'index: [{index}]')
             logger.log(f'original word: <{original_word}>')
@@ -69,10 +76,10 @@ def het_to_arpabet(data=None):
         logger.log(f'No replacements found')
 
     # Find predicted word:
-    if False:
-        predicted_word_list = g2p.predict_text_line("misogyny")
-        originals_t, replacements_t = predicted_word_list
-        logger.log(f'Predicted word special: {replacements_t[0]}')
+    #if False:
+        #predicted_word_list = g2p.predict_text_line("misogyny")
+        #originals_t, replacements_t = predicted_word_list
+        #logger.log(f'Predicted word special: {replacements_t[0]}')
 
     # End timer
     end_time = datetime.datetime.now()
