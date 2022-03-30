@@ -59,7 +59,8 @@ def het_to_arpabet(data=None):
             replacement_string = '{' + ' '.join(replacements[index]) + '}'
             logger.log(f'replacement string: <{replacement_string}>')
             # match the original word as a whole word only using regex (\b) and replace
-            text_line = re.sub(r'\b' + original_word + r'\b', replacement_string, text_line, 1)
+            # match any case of the original word
+            text_line = re.sub(r'\b' + original_word + r'\b', replacement_string, text_line, flags=re.IGNORECASE)
         # Set the data to the new text line
         data["sentence"] = text_line
         # Log the new text line
