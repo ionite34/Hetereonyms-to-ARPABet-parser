@@ -57,7 +57,7 @@ def het_to_arpabet(data=None):
             # If we detect the original_word in the dict_to_replace, skip this iteration
             if original_word in dict_to_replace:
                 logger.log(f"[Caution](1/2): A word was skipped due to dictionary conflict: ['{original_word}']")
-                logger.log(f"[Caution](2/2): A word was skipped due to dictionary conflict: ['{original_word}']")
+                logger.log(f"[Caution](2/2): Intended replacement: ['{original_word}']")
                 continue
             logger.log(f'index: [{index}]')
             logger.log(f'original word: <{original_word}>')
@@ -67,7 +67,8 @@ def het_to_arpabet(data=None):
             logger.log(f'replacement string: <{replacement_string}>')
             # match the original word as a whole word only using regex (\b) and replace
             # match any case of the original word
-            text_line = re.sub(r'\b' + original_word + r'\b', replacement_string, text_line, flags=re.IGNORECASE)
+            # match only the first occurrence of the original word
+            text_line = re.sub(r'\b' + original_word + r'\b', replacement_string, text_line, 1, flags=re.IGNORECASE)
         # Set the data to the new text line
         data["sentence"] = text_line
         # Log the new text line
