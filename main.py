@@ -75,13 +75,7 @@ def het_to_arpabet(data=None):
         logger.log(f'Modified line: <{text_line}>')
     else:
         logger.log(f'No replacements found')
-
-    # Find predicted word:
-    #if False:
-        #predicted_word_list = g2p.predict_text_line("misogyny")
-        #originals_t, replacements_t = predicted_word_list
-        #logger.log(f'Predicted word special: {replacements_t[0]}')
-
+        
     # End timer
     end_time = datetime.datetime.now()
     # Report to log
