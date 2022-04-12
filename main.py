@@ -1,8 +1,16 @@
 # pre-imports
+import os
+import sys
 isDev = setupData["isDev"]
 
-if not isDev:
-    import sys
+dir_path = os.path.dirname(os.path.realpath(__file__))
+nltk_path = dir_path.replace(
+    "\\", "/").split("/cpython")[0]+f'/plugins/hetereonyms_to_arpabet'
+sys.path.append(nltk_path)
+
+if isDev:
+    sys.path.append("./plugins/hetereonyms_to_arpabet")
+else:
     sys.path.append("./resources/app")
 
 # imports
